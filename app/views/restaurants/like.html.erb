@@ -1,0 +1,21 @@
+<% @restaurants.each do |t| %>
+    <div class="retaurant">
+
+      <% if user_signed_in? %>
+     <% if current_user.already_likecd?(t) %>
+     <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.restaurant_name %>
+        <%= link_to restaurant_likec_path(id: t.id, restaurant_id: t.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= t.likecs.count %>
+        <% end %>
+
+
+      <%= t.restaurant_name %>
+      <%= t.information %>
+      <%= link_to "詳細へ", restaurant_path(t.id) %>
+      <%= link_to "編集する", edit_restaurant_path(t.id) %>
+      <%= button_to "削除する", restaurant_path(t.id), method: :delete %>
+    </div>
+  <% end %>
+  <% end %>
+  <% end %>

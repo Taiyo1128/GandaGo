@@ -1,0 +1,32 @@
+<h1>詳細やで</h1>
+<h3>vlog詳細</h3>
+<div class="vlog">
+  <p><%= @vlog.vlog_name %></p>
+  <p><%= @vlog.information %></p>
+  <%= image_tag @vlog.image_url, size: "250x200" if @vlog.image? %>
+
+  <% if user_signed_in? %>
+     <% if current_user.already_liked?(@vlog) %>
+        <%= link_to vlog_like_path(id: @vlog.id, vlog_id: @vlog.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= @vlog.likes.count %>
+        <% end %>
+     <% else %>
+        <%= link_to vlog_likes_path(id: @vlog.id, vlog_id: @vlog.id), data: { turbo_method: :post }  do %>
+            <p>いいね</p><%= @vlog.likes.count %>
+        <% end %>
+     <% end %>
+<% else %>
+    <p>いいねの数 = </p><%= @vlog.likes.count %>
+<% end %>
+
+<h2>いいねしたユーザー</h2>
+<% @vlog.liked_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
+
+<%= link_to "投稿一覧に戻る", vlogs_path %>
+
+<% if user_signed_in? && current_user.id == @vlog.user_id %>
+<%= link_to "編集する", edit_vlog_path(@vlog.id) %>
+<%= button_to "削除する", vlog_path(@vlog.id), method: :delete %>
+<% end %>

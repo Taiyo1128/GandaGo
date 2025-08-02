@@ -1,0 +1,30 @@
+<h1>詳細やで</h1>
+<h3>hotel詳細</h3>
+<div class="hotel">
+  <p><%= @hotel.hotel_name %></p>
+  <p><%= @hotel.information %></p>
+  <%= image_tag @hotel.image_url, size: "250x200" if @hotel.image? %>
+
+  <% if user_signed_in? %>
+     <% if current_user.already_liked?(@hotel) %>
+        <%= link_to hotel_likea_path(id: @hotel.id, hotel_id: @hotel.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= @hotel.likeas.count %>
+        <% end %>
+     <% else %>
+        <%= link_to hotel_likeas_path(id: @hotel.id, hotel_id: @hotel.id), data: { turbo_method: :post }  do %>
+            <p>いいね</p><%= @hotel.likeas.count %>
+        <% end %>
+     <% end %>
+<% else %>
+    <p>いいねの数 = </p><%= @hotel.likeas.count %>
+<% end %>
+
+<h2>いいねしたユーザー</h2>
+<% @hotel.likead_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
+</div>
+
+<%= link_to "投稿一覧に戻る", hotels_path %>
+
+<%= link_to "編集する", edit_hotel_path(@hotel.id) %>

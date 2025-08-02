@@ -1,0 +1,30 @@
+<h1>詳細やで</h1>
+<h3>hotel詳細</h3>
+<div class="spot">
+  <p><%= @spot.spot_name %></p>
+  <p><%= @spot.information %></p>
+  <%= image_tag @spot.image_url, size: "250x200" if @spot.image? %>
+
+  <% if user_signed_in? %>
+     <% if current_user.already_liked?(@spot) %>
+        <%= link_to spot_likeb_path(id: @spot.id, spot_id: @spot.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= @spot.likebs.count %>
+        <% end %>
+     <% else %>
+        <%= link_to spot_likebs_path(id: @spot.id, spot_id: @spot.id), data: { turbo_method: :post }  do %>
+            <p>いいね</p><%= @spot.likebs.count %>
+        <% end %>
+     <% end %>
+<% else %>
+    <p>いいねの数 = </p><%= @spot.likebs.count %>
+<% end %>
+
+<h2>いいねしたユーザー</h2>
+<% @spot.likebd_users.each do |user| %>
+  <li><%= user.email %></li>
+<% end %>
+</div>
+
+<%= link_to "投稿一覧に戻る", spots_path %>
+
+<%= link_to "編集する", edit_spot_path(@spot.id) %>

@@ -1,0 +1,21 @@
+<% @hotels.each do |t| %>
+    <div class="hotel">
+
+      <% if user_signed_in? %>
+     <% if current_user.already_likead?(t) %>
+     <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.hotel_name %>
+        <%= link_to hotel_likea_path(id: t.id, hotel_id: t.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= t.likeas.count %>
+        <% end %>
+
+
+      <%= t.hotel_name %>
+      <%= t.information %>
+      <%= link_to "詳細へ", hotel_path(t.id) %>
+      <%= link_to "編集する", edit_hotel_path(t.id) %>
+      <%= button_to "削除する", hotel_path(t.id), method: :delete %>
+    </div>
+  <% end %>
+  <% end %>
+  <% end %>

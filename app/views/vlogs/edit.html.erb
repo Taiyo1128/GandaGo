@@ -1,0 +1,7 @@
+<%= form_for @vlog do |f| %>
+  <%= f.label :vlog_name %>
+  <%= f.text_field :vlog_name, :size => 140 %> 
+  <%= f.label :information %>
+  <%= f.text_field :information, :size => 140 %>
+  <%= f.submit "編集する" %>
+<% end %>

@@ -1,0 +1,120 @@
+<h1>hotelの投稿</h1>
+<h3>一覧ページ</h3>
+<%= link_to "新規投稿へ", new_restaurant_path %>
+<div class="restaurants-container">
+  <% @restaurants.each do |t| %>
+    <div class="restaurant">
+      <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.restaurant_name %>
+
+      <% if user_signed_in? %>
+     <% if current_user.already_likecd?(t) %>
+        <%= link_to restaurant_likec_path(id: t.id, restaurant_id: t.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= t.likecs.count %>
+        <% end %>
+     <% else %>
+        <%= link_to restaurant_likecs_path(id: t.id, restaurant_id: t.id), data: { turbo_method: :post }  do %>
+            <p>いいね</p><%= t.likecs.count %>
+        <% end %>
+     <% end %>
+<% else %>
+    <p>いいねの数 = </p><%= t.likecs.count %>
+<% end %>
+
+      <%= t.restaurant_name %>
+      <%= t.information %>
+      <%= link_to "詳細へ", restaurant_path(t.id) %>
+      <%= link_to "編集する", edit_restaurant_path(t.id) %>
+      <%= button_to "削除する", restaurant_path(t.id), method: :delete %>
+    </div>
+  <% end %>
+
+  <h1>いいねランキング</h1>
+    <% @rank_restaurants.each do |t| %>
+    <div class="restaurant">
+      <%= image_tag t.image_url, size: "250x200" if t.image? %>
+      <%= t.restaurant_name %>
+
+      <% if user_signed_in? %>
+     <% if current_user.already_likecd?(t) %>
+        <%= link_to restaurant_likec_path(id: t.id, restaurant_id: t.id), data: { turbo_method: :delete } do %>
+            <p>いいねを取り消す</p><%= t.likecs.count %>
+        <% end %>
+     <% else %>
+        <%= link_to restaurant_likecs_path(id: t.id, restaurant_id: t.id), data: { turbo_method: :post }  do %>
+            <p>いいね</p><%= t.likecs.count %>
+        <% end %>
+     <% end %>
+<% else %>
+    <p>いいねの数 = </p><%= t.likecs.count %>
+<% end %>
+
+      <%= t.restaurant_name %>
+      <%= t.information %>
+      <%= link_to "詳細へ", restaurant_path(t.id) %>
+      <%= link_to "編集する", edit_restaurant_path(t.id) %>
+      <%= button_to "削除する", restaurant_path(t.id), method: :delete %>
+    </div>
+  <% end %>
+
+  <%= link_to "いいねページ", likec_path %>
+
+  <div id='map'></div>
+
+<style>
+#map {
+  height: 600px;
+  width: 100%;
+}
+</style>
+
+<!-- js部分 -->
+<script>
+    function initMap() {
+
+      //初期表示位置
+      let latlng = new google.maps.LatLng(38.60, 139.5);
+      //デザイン
+      let styles = [
+           {
+            stylers: [
+             { "saturation": 0 },
+             { "lightness": 0 }
+            ]
+           }
+          ];
+
+      let map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 5.5,
+          styles: styles,
+          center: latlng
+      });
+      let transitLayer = new google.maps.TransitLayer();
+      transitLayer.setMap(map);
+
+//複数マーカー ここから
+      <% @restaurants.each do |restaurant|%>
+        ( function() { 
+          let markerLatLng = { lat: <%= restaurant.lat %>, lng: <%= restaurant.lng %> }; // 緯度経度のデータ作成
+          let marker = new google.maps.Marker({ 
+            position: markerLatLng, 
+            map: map 
+          });
+//マーカーをクリックしたとき、詳細情報を表示
+          let infowindow = new google.maps.InfoWindow({
+            position: markerLatLng,
+            content: "<a href='<%= restaurant_url(restaurant.id) %>' target='_blank'><%= restaurant.restaurant_name %></a>"
+          }); //ここで詳細ページへのリンクを表示させる
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+
+       })();
+      <% end %>
+      //複数マーカー ここまで  
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCARfvcUXae1Ch6I363oRyOGDESbArTVOk&callback=initMap" async defer></script>
+
+</div>

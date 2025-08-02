@@ -1,0 +1,23 @@
+  <h1>あああああ</h1>
+<h3>新規投稿ページ</h3>
+<%= form_for @vlog do |f| %>
+
+  <div class="field">
+    <%= f.label :題名 %>
+    <%= f.text_field :vlog_name, :size => 30 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :題名  %>
+    <%= f.text_area :information, :size => "30x2" %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.file_field :image %>
+  </div>
+
+  <%= f.submit "投稿する" %>
+<% end %>
+
+<%= link_to "一覧に戻る", vlogs_path %>
